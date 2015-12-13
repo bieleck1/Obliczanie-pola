@@ -35,6 +35,7 @@ public class Main {
         points.add(p6);
         points.add(p7);
         points.add(p8);
+        
 
         for (int i = 0; i < points.size(); i++) {
             System.out.println(points.get(i).getX() + " " + points.get(i).getY());
@@ -62,6 +63,14 @@ public class Main {
         for (int i = 0; i < convexHull.getOtherPoints().size(); i++) {
             System.out.println(convexHull.getOtherPoints().get(i).getX() + " " + convexHull.getOtherPoints().get(i).getY());
         }
+        
+        System.out.println();
+        
+        MonteCarlo monteCarlo = new MonteCarlo(hullPoints);
+        
+        double field = monteCarlo.calculateField(100000);
+        
+        System.out.println(field);
     }
 
 }
