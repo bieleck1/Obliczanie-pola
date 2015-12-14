@@ -66,9 +66,13 @@ public class MonteCarlo {
                 insidePoints++;
             }
         }
-
+        
         double hullField = this.squareField * insidePoints / numberOfPoints;
 
+        System.out.println();
+        System.out.println("Ilość wygenerowanych punktów: " + numberOfPoints);
+        System.out.println("Ilość punktów leżących wewnątrz figury: " + insidePoints);
+        
         return hullField;
     }
 
@@ -77,8 +81,7 @@ public class MonteCarlo {
         if (det != 0) {
             return 0;
         } else {
-            if ((Math.min(xx, yx) <= zx) && (zx <= Math.max(xx, yx))
-                    && (Math.min(xy, yy) <= zy) && (zy <= Math.max(xy, yy))) {
+            if ((Math.min(xx, yx) <= zx) && (zx <= Math.max(xx, yx)) && (Math.min(xy, yy) <= zy) && (zy <= Math.max(xy, yy))) {
                 return 1;
             } else {
                 return 0;
@@ -86,15 +89,14 @@ public class MonteCarlo {
         }
     }
 
-    //Wyznacznik macierzy kwadratowej stopnia 3.
+    //Wyznacznik macierzy kwadratowej stopnia 3
     private int det(int xx, int xy, int yx, int yy, int zx, int zy) {
         return (xx * yy + yx * zy + zx * xy - zx * yy - xx * zy - yx * xy);
     }
 
     private int ifIntersectLine(int prevX, int prevY, int ax, int ay, int bx, int by, int nextX, int nextY, int px, int py, int rx, int ry) {
-        if ((ifOnHull(px, py, rx, ry, ax, ay) == 0)
-                && (ifOnHull(px, py, rx, ry, bx, by) == 0)) {
-            //p�lprosta nie przecina odcinka |AB| w koncach
+        if ((ifOnHull(px, py, rx, ry, ax, ay) == 0) && (ifOnHull(px, py, rx, ry, bx, by) == 0)) {
+            //polprosta nie przecina odcinka |AB| w koncach
             if ((Math.signum(det(px, py, rx, ry, ax, ay)) != Math.signum(det(px, py, rx, ry, bx, by)))
                     && (Math.signum(det(ax, ay, bx, by, px, py)) != Math.signum(det(ax, ay, bx, by, rx, ry)))) {
                 return 1;
@@ -102,18 +104,15 @@ public class MonteCarlo {
                 return 0;
             }
         } else {
-            //			do p�lprostej nalezy przynajmniej jeden koniec odcinka |AB|
-            if ((ifOnHull(px, py, rx, ry, ax, ay) == 1)
-                    && (ifOnHull(px, py, rx, ry, bx, by) == 1)) {
-                if (Math.signum(det(px, py, rx, ry, prevX, prevY)) == Math.signum(det(px, py, rx, ry, nextX, nextY))
-                        && Math.signum(det(px, py, rx, ry, prevX, prevY)) != 0) {
+            //do polprostej nalezy przynajmniej jeden koniec odcinka |AB|
+            if ((ifOnHull(px, py, rx, ry, ax, ay) == 1) && (ifOnHull(px, py, rx, ry, bx, by) == 1)) {
+                if (Math.signum(det(px, py, rx, ry, prevX, prevY)) == Math.signum(det(px, py, rx, ry, nextX, nextY)) && Math.signum(det(px, py, rx, ry, prevX, prevY)) != 0) {
                     return 0;
                 } else {
                     return 1;
                 }
             } else {
-                if ((ifOnHull(px, py, rx, ry, prevX, prevY) == 1)
-                        || (ifOnHull(px, py, rx, ry, nextX, nextY) == 1)) {
+                if ((ifOnHull(px, py, rx, ry, prevX, prevY) == 1) || (ifOnHull(px, py, rx, ry, nextX, nextY) == 1)) {
                     return 0;
                 } else {
                     //polprosta zawiera tylko wierzcholek
@@ -123,8 +122,7 @@ public class MonteCarlo {
                         return 0;
                     }
                     if (ifOnHull(px, py, rx, ry, ax, ay) == 1) {
-                        if (Math.signum(det(px, py, rx, ry, this.tmpX, this.tmpY)) == Math.signum(det(px, py, rx, ry, bx, by))
-                                && Math.signum(det(px, py, rx, ry, this.tmpX, this.tmpY)) != 0) {
+                        if (Math.signum(det(px, py, rx, ry, this.tmpX, this.tmpY)) == Math.signum(det(px, py, rx, ry, bx, by)) && Math.signum(det(px, py, rx, ry, this.tmpX, this.tmpY)) != 0) {
                             return 0;
                         } else {
                             return 1;
@@ -135,68 +133,7 @@ public class MonteCarlo {
         }
         return 0;
     }
-    /*
-     private boolean ifOnHull(int pX, int pY, int qX, int qY, int rX, int rY) {
-     if (det(pX, pY, qX, qY, rX, rY) != 0) {
-     return false;
-     } else {
-     if ((Math.min(pX, qX) <= rX) && (rX <= Math.max(pX, qX))
-     && (Math.min(pY, qY) <= rY) && (rY <= Math.max(pY, qY))) {
-     return true;
-     } else {
-     return false;
-     }
-     }
-     }
-
-     private boolean ifIntersectLine(int oX, int oY, int pX, int pY, int qX, int qY, int sX, int sY, int rX, int rY, int rayX, int rayY) {
-     if ((ifOnHull(rX, rY, rayX, rayY, pX, pY) == false) && (ifOnHull(rX, rY, rayX, rayY, qX, qY) == false)) {
-     //pólprosta nie przecina odcinka |AB| w koncach
-     if ((Math.signum(det(rX, rY, rayX, rayY, pX, pY)) != Math.signum(det(rX, rY, rayX, rayY, qX, qY)))
-     && (Math.signum(det(pX, pY, qX, qY, rX, rY)) != Math.signum(det(pX, pY, qX, qY, rayX, rayY)))) {
-     return true;
-     } else {
-     return false;
-     }
-     } else {
-     //          do pólprostej nalezy przynajmniej jeden koniec odcinka |AB|
-     if ((ifOnHull(rX, rY, rayX, rayY, pX, pY) == true)
-     && (ifOnHull(rX, rY, rayX, rayY, qX, qY) == true)) {
-     if (Math.signum(det(rX, rY, rayX, rayY, oX, oY)) == Math.signum(det(rX, rY, rayX, rayY, sX, sY))
-     && Math.signum(det(rX, rY, rayX, rayY, oX, oY)) != 0) {
-     return false;
-     } else {
-     return true;
-     }
-     } else {
-     if ((ifOnHull(rX, rY, rayX, rayY, oX, oY) == true)
-     || (ifOnHull(rX, rY, rayX, rayY, sX, sY) == true)) {
-     return false;
-     } else {
-     //polprosta zawiera tylko wierzcholek
-     if (ifOnHull(rX, rY, rayX, rayY, qX, qY) == true) {
-     this.tmpX = pX;
-     this.tmpY = pY;
-     return false;
-     }
-     if (ifOnHull(rX, rY, rayX, rayY, pX, pY) == true) {
-     if (Math.signum(det(rX, rY, rayX, rayY, this.tmpX, this.tmpY)) == Math.signum(det(rX, rY, rayX, rayY, qX, qY))
-     && Math.signum(det(rX, rY, rayX, rayY, this.tmpX, this.tmpY)) != 0) {
-     return false;
-     } else {
-     return true;
-     }
-     }
-     }
-     }
-     }
-     return false;
-     }
-
-     private int det(int pX, int pY, int qX, int qY, int rX, int rY) {
-     return (pX * pY + qX * rY + rX * pY - rX * qY - pX * rY - qX * pY);
-     }*/
-
+    
     private void calculateSquareField() {
         for (int i = 1; i < this.hullPoints.size(); i++) {
             if (this.maxX < this.hullPoints.get(i).getX()) {

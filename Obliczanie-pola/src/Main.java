@@ -36,13 +36,16 @@ public class Main {
         points.add(p7);
         points.add(p8);
         
-
+        System.out.println("Punkty przed posortowaniem:");
+        
         for (int i = 0; i < points.size(); i++) {
             System.out.println(points.get(i).getX() + " " + points.get(i).getY());
         }
 
         points.sort(null);
+        
         System.out.println();
+        System.out.println("Punkty po posortowaniu:");
 
         for (int i = 0; i < points.size(); i++) {
             System.out.println(points.get(i).getX() + " " + points.get(i).getY());
@@ -53,24 +56,18 @@ public class Main {
         ConvexHull convexHull = new ConvexHull();
 
         ArrayList<Point> hullPoints = convexHull.designateConvexHull(points);
+        
+        System.out.println("Wierzchołki figury:");
 
         for (int i = 0; i < hullPoints.size(); i++) {
             System.out.println(hullPoints.get(i).getX() + " " + hullPoints.get(i).getY());
         }
-
-        System.out.println();
-
-        for (int i = 0; i < convexHull.getOtherPoints().size(); i++) {
-            System.out.println(convexHull.getOtherPoints().get(i).getX() + " " + convexHull.getOtherPoints().get(i).getY());
-        }
-        
-        System.out.println();
         
         MonteCarlo monteCarlo = new MonteCarlo(hullPoints);
         
         double field = monteCarlo.calculateField(100000);
         
-        System.out.println(field);
+        System.out.println("Pole figury: " + field);
     }
 
 }
